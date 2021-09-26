@@ -10,5 +10,9 @@ RUN npm install
 # so, when we rebuild the image, if 'package.json' isn't changed, the build system will use the previously made cache, and won't run the commands
 COPY . ./
 
-EXPOSE 3000
-CMD [ "npm", "run", "dev"]
+# default port is 3000
+ENV PORT 3000
+
+EXPOSE $PORT
+
+CMD [ "npm", "run", "dev"]  
