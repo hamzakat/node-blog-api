@@ -8,3 +8,8 @@ services:
     environment:
       - PORT=3000
 
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
