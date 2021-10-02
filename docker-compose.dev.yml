@@ -12,4 +12,11 @@ services:
     - /app/node_modules  # anonymous volume: it is not synced with host after building
     environment:
       - NODE_ENV=development
+      - MONGO_USER=admin
+      - MONGO_PASSWORD=admin
     command: npm run dev # override the CMD of Dockerfile
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin

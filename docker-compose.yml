@@ -13,3 +13,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - mongo-db:/data/db
+
+volumes:
+  mongo-db: 
