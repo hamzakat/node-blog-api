@@ -1,0 +1,12 @@
+# add the configs for produciton
+version: "3"
+services:
+  node-app:
+    # override BUILD in Dockerfile
+    build:
+      context: .
+      args: 
+        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
+    command: node index.js

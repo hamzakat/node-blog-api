@@ -1,0 +1,10 @@
+# add the  configs that are shared between prods and dev environments
+version: "3"
+services:
+  node-app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+

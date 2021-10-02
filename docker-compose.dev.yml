@@ -1,0 +1,15 @@
+# add the configs for development
+version: "3"
+services:
+  node-app:
+    # override BUILD in Dockerfile
+    build:
+      context: .  # workdir
+      args: 
+        NODE_ENV: development
+    volumes:
+    - ./:/app
+    - /app/node_modules  # anonymous volume: it is not synced with host after building
+    environment:
+      - NODE_ENV=development
+    command: npm run dev # override the CMD of Dockerfile
