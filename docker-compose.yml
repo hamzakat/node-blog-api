@@ -2,11 +2,13 @@
 version: "3"
 services:
   node-app:
-    build: .
+    build: .  # build the custom image we have configured in Dockerfile
     ports:
       - "3000:3000"
     environment:
       - PORT=3000
+    depends_on:
+      - mongo # this makes mongo service runs first to avoid conflicts
 
   mongo:
     image: mongo
