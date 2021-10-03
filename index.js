@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
 const { MONGO_USER, MONGO_PASSWORD, MONGO_IP, MONGO_PORT } = require('./config.js/config');
-const express = require('express')
-
-const app = express();
-
 const mongoURL = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`;
 
 connectWithRetry = () => {
@@ -16,13 +12,21 @@ connectWithRetry = () => {
     .catch((e) => {
         setTimeout(connectWithRetry, 5000)
     });
-}
+};
+connectWithRetry();
 
+const express = require('express');
+const postRouter = require('./routes/postRoute');
+const app = express();
 
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Hello !!!')
 });
+
+// localhost:3000/api/v1/posts
+app.use('/api/v1/posts', postRouter);
 
 const port = process.env.PORT || 3000; 
 
