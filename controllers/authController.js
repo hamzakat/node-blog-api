@@ -26,3 +26,42 @@ exports.signUp = async (req, res) => {
     }
     
 }
+
+exports.login = async (req, res) => {
+    // extract from body
+    const {username, password} = req.body
+
+    try {
+        
+        // search for the user in the DB
+        const user = await User.findOne({username})
+        
+        if (!user) {
+            return res.status(404).json({
+                status: 'fail',
+                message: 'user not found'
+            })
+        }
+        
+        // compare the recived password with the encrypted password in the DB
+        const isCorrect = await bcrypt.compare(password, user.password)
+        
+        console.log(1212)
+        if (isCorrect) {
+            res.status(200).json({
+                status: "success"
+            })
+        } else {
+            res.status(400).json({
+                status: "fail",
+                message: "password not correct"
+            })
+        }
+        
+       
+    } catch (e) {
+        res.status(400).json({
+            status: "fail",
+        })
+    }
+}
