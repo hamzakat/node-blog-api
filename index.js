@@ -1,9 +1,20 @@
-const { MONGO_USER, MONGO_PASSWORD, MONGO_IP, MONGO_PORT, REDIS_URL, REDIS_PORT, SESSION_SECRET } = require('./config.js/config');
+const express = require('express');
 const mongoose = require('mongoose');
-const mongoURL = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`;
-
 const redis = require("redis")
 const session = require("express-session")
+const cors = require("cors")
+
+const { 
+    MONGO_USER, 
+    MONGO_PASSWORD,
+    MONGO_IP, 
+    MONGO_PORT, 
+    REDIS_URL, 
+    REDIS_PORT, 
+    SESSION_SECRET 
+} = require('./config.js/config');
+
+
 
 let RedisStore = require("connect-redis")(session)  // passing the session to redis storage
 let redisClient = redis.createClient({
@@ -12,7 +23,9 @@ let redisClient = redis.createClient({
 })
 
 
-connectWithRetry = () => {
+const mongoURL = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`;
+
+const connectWithRetry = () => {
     mongoose
     .connect(mongoURL, {
         useNewUrlParser: true,
@@ -25,17 +38,14 @@ connectWithRetry = () => {
 };
 connectWithRetry();
 
-const express = require('express');
+// Main app
 const app = express();
-
-// Routes
-const postRouter = require('./routes/postRoute');
-const userRouter = require('./routes/userRoute');
 
 // Enable "trust proxy" (because our app is behind a reverse proxy)
 app.enable("trust proxy")
 
 // Middlewares
+app.use(cors) // enable CORS globally
 app.use(express.json());
 app.use(session({
     store: new RedisStore({
@@ -51,15 +61,18 @@ app.use(session({
     }
 }))
 
+// Routes
+const postRouter = require('./routes/postRoute');
+const userRouter = require('./routes/userRoute');
+
+// Use Routes
+app.use('/api/v1/posts', postRouter);
+app.use('/api/v1/users', userRouter);
+
 app.get('/api', (req, res) => {
     res.send('You are using the API!')
     console.log("/api is visited")
 });
 
-// localhost:3000/api/v1/$$$
-app.use('/api/v1/posts', postRouter);
-app.use('/api/v1/users', userRouter);
-
 const port = process.env.PORT || 3000; 
-
 app.listen(port, () => console.log(`listening on ${port}`)) 
