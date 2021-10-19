@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
+const { use } = require('../routes/userRoute');
 
 exports.signUp = async (req, res) => {
     // extract from body
@@ -13,6 +14,7 @@ exports.signUp = async (req, res) => {
             username: username,
             password: hashPassword
         })
+        req.session.user = newUser   
         res.status(201).json({
             status: "success",
             data: {
@@ -48,6 +50,7 @@ exports.login = async (req, res) => {
         
         console.log(1212)
         if (isCorrect) {
+            req.session.user = user // assign user object to "user" property of session   
             res.status(200).json({
                 status: "success"
             })
