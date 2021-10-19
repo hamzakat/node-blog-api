@@ -1,6 +1,9 @@
 # add the configs for development
 version: "3"
 services:
+  nginx:
+    ports:
+      - "3000:80"
   node-app:
     # override BUILD in Dockerfile
     build:

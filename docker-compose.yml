@@ -1,10 +1,14 @@
 # add the  configs that are shared between prods and dev environments
 version: "3"
 services:
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
   node-app:
     build: .  # build the custom image we have configured in Dockerfile
-    ports:
-      - "3000:3000"
     environment:
       - PORT=3000
     depends_on:
