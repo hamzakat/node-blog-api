@@ -32,6 +32,9 @@ const app = express();
 const postRouter = require('./routes/postRoute');
 const userRouter = require('./routes/userRoute');
 
+// Enable "trust proxy" (because our app is behind a reverse proxy)
+app.enable("trust proxy")
+
 // Middlewares
 app.use(express.json());
 app.use(session({
@@ -48,8 +51,9 @@ app.use(session({
     }
 }))
 
-app.get('/', (req, res) => {
-    res.send('Hello !!!')
+app.get('/api', (req, res) => {
+    res.send('You are using the API!')
+    console.log("/api is visited")
 });
 
 // localhost:3000/api/v1/$$$
